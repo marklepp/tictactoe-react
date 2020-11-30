@@ -5,6 +5,25 @@ import ReactDOM from "react-dom";
 
 import "./styles.css";
 
+const inclusiverange = (from, to) => {
+  var values = [];
+  for (from; from <= to; from++) {
+    values.push(from);
+  }
+  return values;
+};
+
+const initialState = {
+  rows: inclusiverange(-2, 2).map((row) => {
+    return {
+      id: row,
+      columns: inclusiverange(-2, 2).map((col) => {
+        return { id: col, value: "" };
+      })
+    };
+  })
+};
+
 const getOtherPlayer = (player) => {
   if (player === "o") {
     player = "x";
@@ -12,14 +31,6 @@ const getOtherPlayer = (player) => {
     player = "o";
   }
   return player;
-};
-
-const inclusiverange = (from, to) => {
-  var values = [];
-  for (from; from <= to; from++) {
-    values.push(from);
-  }
-  return values;
 };
 
 const expandBounds = ({ x, y }, { minX, minY, maxX, maxY }, setBounds) => {
