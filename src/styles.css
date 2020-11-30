@@ -1,0 +1,39 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.Tictactoe__table-wrapper {
+  height: 80vh;
+  overflow: scroll;
+}
+
+.Tictactoe__table {
+  margin: auto;
+  width: max-content;
+  border-collapse: collapse;
+  border: solid 1px black;
+}
+.Tictactoe__cell {
+  width: 60px;
+  height: 60px;
+  border: solid black 1px;
+  text-align: center;
+  font-family: Helvetica;
+  font-size: 30px;
+}
+
+.Tictactoe__progressbar-wrapper {
+  margin-top: 10px;
+  border: 1px solid black;
+  height: 40px;
+}
+.Tictactoe__progressbar-progress {
+  height: 40px;
+}
+.Tictactoe__progressbar-progress[data-player="x"] {
+  background-color: rgb(78, 155, 0);
+}
+.Tictactoe__progressbar-progress[data-player="o"] {
+  background-color: rgba(221, 63, 45, 0.625);
+}
