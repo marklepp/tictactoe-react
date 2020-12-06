@@ -1,9 +1,134 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-//import { useSelector } from 'react-redux'
-//import { createStore } from "redux";
+import { Provider, connect } from "react-redux";
+import { createStore } from "redux";
 
 import "./styles.css";
+
+const initialState = { cells: {} };
+
+const Cells = (state = initialState, action) => {
+  switch (action.type) {
+    case "CLICK_CELL": {
+      const { row, column, player } = action.payload;
+      const rowItem = state.cells[row] ? { ...state.cells[row] } : {};
+      rowItem[column] = player;
+      return {
+        ...state,
+        cells: {
+          ...state.cells,
+          [row]: rowItem
+        }
+      };
+    }
+    case "CHECK_WIN": {
+      const { row, column, player } = action.payload;
+      checkWinCondition(state, player, row, column);
+      return { ...state };
+    }
+    default:
+      return state;
+  }
+};
+
+const clickCell = (row, column, player) => ({
+  type: "CLICK_CELL",
+  payload: { row, column, player }
+});
+
+const checkPlayerWin = (player, row, column) => ({
+  type: "CHECK_WIN",
+  payload: { row, column, player }
+});
+
+const store = createStore(Cells);
+
+const getCells = (store) => store.cells;
+const getCellValue = (cells, row, col) => {
+  return cells[row] ? (cells[row][col] ? cells[row][col] : "") : "";
+};
+const getCellValueFromStore = (store, row, col) => {
+  return getCellValue(getCells(store), row, col);
+};
+
+const cellIterator = (cells, rowStart, rowEnd, columnStart, columnEnd) => {
+  var currentRow = rowStart;
+  var dRow = 1;
+  var currentCol = columnStart;
+  var dCol = 1;
+
+  if (rowStart > rowEnd) {
+    dRow = -1;
+  } else if (rowStart === rowEnd) {
+    dRow = 0;
+  }
+
+  if (columnStart > columnEnd) {
+    dCol = -1;
+  } else if (columnStart === columnEnd) {
+    dCol = 0;
+  }
+
+  return {
+    next: function () {
+      if (currentRow !== rowEnd || currentCol !== columnEnd) {
+        currentRow += dRow;
+        currentCol += dCol;
+        return {
+          value: getCellValue(cells, currentRow, currentCol),
+          done: false
+        };
+      } else {
+        return { value: undefined, done: true };
+      }
+    },
+    [Symbol.iterator]: function () {
+      return this;
+    }
+  };
+};
+
+const checkStraightLineWin = (player, cellIter) => {
+  let winning = 0;
+  for (let cell of cellIter) {
+    if (player === cell) {
+      winning++;
+    } else {
+      winning = 0;
+    }
+    if (winning === 5) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const checkWinCondition = (store, player, row, column) => {
+  const cells = getCells(store);
+
+  if (
+    checkStraightLineWin(
+      player,
+      cellIterator(cells, row, row, column - 5, column + 5)
+    ) ||
+    checkStraightLineWin(
+      player,
+      cellIterator(cells, row - 5, row + 5, column, column)
+    ) ||
+    checkStraightLineWin(
+      player,
+      cellIterator(cells, row - 5, row + 5, column - 5, column + 5)
+    ) ||
+    checkStraightLineWin(
+      player,
+      cellIterator(cells, row + 5, row - 5, column - 5, column + 5)
+    )
+  ) {
+    alert("Player " + (player === "x" ? "1" : "2") + " won!");
+    return true;
+  }
+  return false;
+};
 
 const inclusiverange = (from, to) => {
   var values = [];
@@ -13,19 +138,8 @@ const inclusiverange = (from, to) => {
   return values;
 };
 
-const initialState = {
-  rows: inclusiverange(-2, 2).map((row) => {
-    return {
-      id: row,
-      columns: inclusiverange(-2, 2).map((col) => {
-        return { id: col, value: "" };
-      })
-    };
-  })
-};
-
-const getOtherPlayer = (player) => {
-  if (player === "o") {
+const nextPlayer = (player) => {
+  if (player === "o" || !player) {
     player = "x";
   } else {
     player = "o";
@@ -41,24 +155,50 @@ const expandBounds = ({ x, y }, { minX, minY, maxX, maxY }, setBounds) => {
   setBounds({ minX, minY, maxX, maxY });
 };
 
-const TictactoeCell = ({
-  rownum,
-  columnnum,
-  bounds,
-  setBounds,
-  player,
-  setPlayer
-}) => {
-  return (
-    <td
-      className="Tictactoe__cell"
-      onClick={() => {
-        setPlayer(getOtherPlayer(player));
-        expandBounds({ x: columnnum, y: rownum }, bounds, setBounds);
-      }}
-    ></td>
-  );
+const mapStateToPropsCell = (state, ownProps) => {
+  const { rownum, columnnum } = ownProps;
+  ownProps.cellValue = getCellValueFromStore(state, rownum, columnnum);
+  ownProps.gameFinished = state.gameFinished;
+  return ownProps;
 };
+
+const TictactoeCell = connect(mapStateToPropsCell, {
+  clickCell,
+  checkPlayerWin
+})(
+  ({
+    rownum,
+    columnnum,
+    bounds,
+    setBounds,
+    player,
+    setPlayer,
+    cellValue,
+    gameFinished,
+    clickCell,
+    checkPlayerWin
+  }) => {
+    if (cellValue !== "" || gameFinished) {
+      return (
+        <td className="Tictactoe__cell" data-mark={cellValue}>
+          {cellValue}
+        </td>
+      );
+    } else {
+      return (
+        <td
+          className="Tictactoe__cell"
+          onClick={() => {
+            clickCell(rownum, columnnum, player);
+            checkPlayerWin(player, rownum, columnnum);
+            setPlayer(nextPlayer(player));
+            expandBounds({ x: columnnum, y: rownum }, bounds, setBounds);
+          }}
+        ></td>
+      );
+    }
+  }
+);
 
 const TictactoeRow = (props) => {
   return (
@@ -97,7 +237,7 @@ const TictactoeProgressBar = ({ player, turnTime, start, setPlayer }) => {
     if (newPercent < 100) {
       setPercent(newPercent);
     } else {
-      setPlayer(getOtherPlayer(player));
+      setPlayer(nextPlayer(player));
     }
   });
   return (
@@ -113,7 +253,7 @@ const TictactoeProgressBar = ({ player, turnTime, start, setPlayer }) => {
 
 const Tictactoe = (props) => {
   const turnTime = 10000;
-  const [player, setPlayer] = useState("x");
+  const [player, setPlayer] = useState(nextPlayer());
 
   const [bounds, setBounds] = useState({
     minX: -2,
@@ -152,7 +292,9 @@ const App = () => {
 const rootElement = document.getElementById("root");
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   rootElement
 );

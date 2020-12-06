@@ -22,6 +22,12 @@
   font-family: Helvetica;
   font-size: 30px;
 }
+.Tictactoe__cell[data-mark="x"] {
+  background-color: rgb(78, 155, 0);
+}
+.Tictactoe__cell[data-mark="o"] {
+  background-color: rgba(221, 63, 45, 0.625);
+}
 
 .Tictactoe__progressbar-wrapper {
   margin-top: 10px;
