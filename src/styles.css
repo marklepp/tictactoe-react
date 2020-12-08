@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .App {
   font-family: sans-serif;
   text-align: center;
@@ -15,6 +20,9 @@
 }
 
 .Tictactoe__header {
+  display: inline-block;
+  padding: 1em;
+  transform: translateY(-25%);
   height: calc(7vh - 1em);
   font-size: calc(1em + 2vh);
 }
@@ -49,15 +57,18 @@
 }
 
 .Tictactoe__progressbar-wrapper {
+  box-sizing: content-box;
+  margin-left: 1vw;
+  margin-right: 1vw;
   margin-top: 1vh;
   border: 1px solid black;
-  height: 2vh;
-  border-radius: 3vh;
+  height: 1vh;
+  border-radius: 1vh;
   max-height: 20px;
+  overflow: hidden;
 }
 .Tictactoe__progressbar-progress {
-  height: 2vh;
-  border-radius: 3vh;
+  height: 1vh;
   max-height: 20px;
 }
 .Tictactoe__progressbar-progress[data-player="x"] {
