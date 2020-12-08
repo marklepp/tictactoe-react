@@ -29,25 +29,26 @@
 
 .Tictactoe__table-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-left: 1em;
+  margin-right: 1em;
   height: 80vh;
   overflow: auto;
 }
 
 .Tictactoe__table {
-  margin: 0px auto;
+  table-layout: fixed;
+  margin: auto;
   width: max-content;
   border-collapse: collapse;
   border: solid 1px black;
 }
 .Tictactoe__cell {
+  font-size: calc(2.5rem - calc(1.5rem - 2vh));
   width: 2em;
   height: 2em;
   border: solid black 1px;
   text-align: center;
   font-family: Helvetica;
-  font-size: calc(2.5rem - calc(1.5rem - 2vh));
 }
 .Tictactoe__cell[data-mark="x"] {
   background-color: rgb(78, 155, 0);
