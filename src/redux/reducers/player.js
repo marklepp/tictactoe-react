@@ -1,5 +1,6 @@
 import { NEXT_PLAYER } from "../actionTypes";
 import { TURNTIME } from "../../constants";
+import makeReducer from "../makeReducer";
 
 const nextPlayerSymbol = (player) => {
   if (player === "o") {
@@ -21,10 +22,4 @@ const initialState = {
   turnStart: Date.now()
 };
 
-export default (state = initialState, action) => {
-  if (actions.hasOwnProperty(action.type)) {
-    return actions[action.type](state, action.payload);
-  } else {
-    return state;
-  }
-};
+export default makeReducer(initialState, actions);

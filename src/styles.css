@@ -1,26 +1,45 @@
 .App {
   font-family: sans-serif;
   text-align: center;
+  height: 100%;
+}
+
+.Tictactoe__resetBtn {
+  margin-top: 0.5em;
+  width: 7em;
+  height: calc(6vh - 14px);
+  max-height: 4em;
+  min-height: 2em;
+  font-size: 14px;
+  border-radius: 0.25em;
+}
+
+.Tictactoe__header {
+  height: calc(7vh - 1em);
+  font-size: calc(1em + 2vh);
 }
 
 .Tictactoe__table-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 80vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .Tictactoe__table {
-  margin: auto;
+  margin: 0px auto;
   width: max-content;
   border-collapse: collapse;
   border: solid 1px black;
 }
 .Tictactoe__cell {
-  width: 60px;
-  height: 60px;
+  width: 2em;
+  height: 2em;
   border: solid black 1px;
   text-align: center;
   font-family: Helvetica;
-  font-size: 30px;
+  font-size: calc(2.5rem - calc(1.5rem - 2vh));
 }
 .Tictactoe__cell[data-mark="x"] {
   background-color: rgb(78, 155, 0);
@@ -30,12 +49,16 @@
 }
 
 .Tictactoe__progressbar-wrapper {
-  margin-top: 10px;
+  margin-top: 1vh;
   border: 1px solid black;
-  height: 40px;
+  height: 2vh;
+  border-radius: 3vh;
+  max-height: 20px;
 }
 .Tictactoe__progressbar-progress {
-  height: 40px;
+  height: 2vh;
+  border-radius: 3vh;
+  max-height: 20px;
 }
 .Tictactoe__progressbar-progress[data-player="x"] {
   background-color: rgb(78, 155, 0);

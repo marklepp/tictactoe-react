@@ -1,4 +1,5 @@
-import { CLICK_CELL, CHECK_WIN, EXPAND_BOUNDS } from "../actionTypes";
+import { CLICK_CELL, CHECK_WIN, EXPAND_BOUNDS, RESET } from "../actionTypes";
+import makeReducer from "../makeReducer";
 
 const getCellValue = (cells, row, col) => {
   return cells[row] ? (cells[row][col] ? cells[row][col] : "") : "";
@@ -147,10 +148,4 @@ const initialState = {
   gameFinished: false
 };
 
-export default (state = initialState, action) => {
-  if (actions.hasOwnProperty(action.type)) {
-    return actions[action.type](state, action.payload);
-  } else {
-    return { ...state };
-  }
-};
+export default makeReducer(initialState, actions);
