@@ -1,4 +1,4 @@
-import { CLICK_CELL, CHECK_WIN, EXPAND_BOUNDS, RESET } from "../actionTypes";
+import { CLICK_CELL, CHECK_WIN, EXPAND_BOUNDS } from "../actionTypes";
 import makeReducer from "../makeReducer";
 
 const getCellValue = (cells, row, col) => {
